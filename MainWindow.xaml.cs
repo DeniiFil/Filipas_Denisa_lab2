@@ -25,34 +25,94 @@ namespace Filipas_Denisa_Lab2
             InitializeComponent();
         }
 
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void txtChocolateFilled_TextChanged(object sender, TextChangedEventArgs e)
         {
 
         }
 
-        private void txtQuantity_TextChanged(object sender, TextChangedEventArgs e)
-        {
+        private DoughnutMachine myDoughnutMachine;
 
+        private void frmMain_Loaded(object sender, RoutedEventArgs e)
+        {
+            //  instantiem un obiect din clasa DoughnutMachine
+            DoughnutMachine myDoughnutMachine = new DoughnutMachine();
+
+            myDoughnutMachine.DoughnutComplete += new
+            DoughnutMachine.DoughnutCompleteDelegate(DoughnutCompleteHandler);
         }
 
-        private void cmbType_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
+        private int mRaisedGlazed;
+        private int mRaisedSugar;
+        private int mFilledLemon;
+        private int mFilledChocolate;
+        private int mFilledVanilla;
 
+        private void glazedToolStripMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            glazedToolStripMenuItem.IsChecked = true;
+            sugarToolStripMenuItem.IsChecked = false;
+            myDoughnutMachine.MakeDoughnuts(DoughnutType.Glazed);
         }
 
-        private void txtTotal_TextChanged(object sender, TextChangedEventArgs e)
+        private void sugarToolStripMenuItem_Click(object sender, RoutedEventArgs e)
         {
-
+            //  completam cu instructiunile necesare
+            sugarToolStripMenuItem.IsChecked = true;
+            glazedToolStripMenuItem.IsChecked = false;
+            myDoughnutMachine.MakeDoughnuts(DoughnutType.Sugar);
         }
 
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        private void DoughnutCompleteHandler()
         {
+            switch (myDoughnutMachine.Flavor)
+            {
+                case DoughnutType.Glazed:
+                    mRaisedGlazed++;
+                    txtGlazedRaised.Text = mRaisedGlazed.ToString();
+                    break;
 
+
+                case DoughnutType.Sugar:
+                    mRaisedSugar++;
+                    txtSugarRaised.Text = mRaisedSugar.ToString();
+                    break;
+                //...  
+                //  completam cu instructiunile necesare 
+
+                case DoughnutType.Vanilla:
+                    mFilledVanilla++;
+                    txtVanillaFilled.Text = mFilledVanilla.ToString();
+                    break;
+
+                case DoughnutType.Lemon:
+                    mFilledLemon++;
+                    txtLemonFilled.Text = mFilledLemon.ToString();
+                    break;
+
+                case DoughnutType.Chocolate:
+                    mFilledChocolate++;
+                    txtChocolateFilled.Text = mFilledChocolate.ToString();
+                    break;
+            }
         }
 
-        private void MenuItem_Click_1(object sender, RoutedEventArgs e)
+        private void stopToolStripMenuItem_Click(object sender, RoutedEventArgs e)
         {
+            myDoughnutMachine.Enabled = false;
+        }
 
+        private void txtQuantity_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (!(e.Key >= Key.D0 && e.Key <= Key.D9))
+            {
+                MessageBox.Show("Numai cifre se pot introduce!", "Input Error", MessageBoxButton.OK,
+                MessageBoxImage.Error);
+            }
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
     }
 }
